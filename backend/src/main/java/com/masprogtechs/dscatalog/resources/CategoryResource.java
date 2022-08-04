@@ -1,19 +1,23 @@
 package com.masprogtechs.dscatalog.resources;
 
 import java.net.URI;
+
 import java.util.List;
 
+//import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.masprogtechs.dscatalog.dto.CategoryDTO;
+//import com.masprogtechs.dscatalog.entities.Category;
 import com.masprogtechs.dscatalog.services.CategoryService;
 
 @RestController
@@ -43,17 +47,36 @@ public class CategoryResource {
 		CategoryDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto){
+	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
 		dto = service.insert(dto);
-		
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(dto.getId()).toUri();
-		
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+
 		return ResponseEntity.created(uri).body(dto);
-		
-		
+
 	}
 
+	@PutMapping()
+	public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO dto) {
+		dto = service.update(dto);
+		return ResponseEntity.ok().body(dto);
+
+	}
+
+	
+	
+	/*
+	 @PutMapping("/{id}")
+     public ResponseEntity<Void> update(@RequestBody CategoryDTO dto,
+                                        @PathVariable(value="id") Long id){
+         
+         ModelMapper modelMapper = new ModelMapper();
+         Category obj = modelMapper.map(dto,Category.class);
+         obj.setId(id);
+         obj = this.service.update(obj);
+         return ResponseEntity.noContent().build();
+     }
+     */
 }
