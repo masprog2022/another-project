@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.masprogtechs.dscatalog.dto.CategoryDTO;
 import com.masprogtechs.dscatalog.entities.Category;
+import com.masprogtechs.dscatalog.exceptions.DatabaseException;
 import com.masprogtechs.dscatalog.exceptions.ResourceNotFoundException;
 import com.masprogtechs.dscatalog.repositories.CategoryRepository;
 
@@ -70,6 +73,17 @@ public class CategoryService {
 			BeanUtils.copyProperties(entity, dto);
 
 			return dto;
+	}
+	
+	public void delete(Long id) {
+		try {
+		repository.deleteById(id);
+		}catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Id not found! " + id);	
+	    }catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Integtation Vailation");
+		}
+		
 	}
 	
 

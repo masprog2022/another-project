@@ -1,12 +1,13 @@
 package com.masprogtechs.dscatalog.resources;
 
 import java.net.URI;
-
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 //import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.masprogtechs.dscatalog.dto.CategoryDTO;
+import com.masprogtechs.dscatalog.entities.Category;
 //import com.masprogtechs.dscatalog.entities.Category;
 import com.masprogtechs.dscatalog.services.CategoryService;
 
@@ -64,19 +66,12 @@ public class CategoryResource {
 		return ResponseEntity.ok().body(dto);
 
 	}
-
 	
-	
-	/*
-	 @PutMapping("/{id}")
-     public ResponseEntity<Void> update(@RequestBody CategoryDTO dto,
-                                        @PathVariable(value="id") Long id){
-         
-         ModelMapper modelMapper = new ModelMapper();
-         Category obj = modelMapper.map(dto,Category.class);
-         obj.setId(id);
-         obj = this.service.update(obj);
+	 @DeleteMapping("/{id}")
+     public ResponseEntity<Void> delete(@PathVariable(value="id") Long id){
+         service.delete(id);
          return ResponseEntity.noContent().build();
+   
      }
-     */
+     
 }
