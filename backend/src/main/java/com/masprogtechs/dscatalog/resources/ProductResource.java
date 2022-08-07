@@ -1,7 +1,7 @@
 package com.masprogtechs.dscatalog.resources;
 
 import java.net.URI;
-import java.util.List;
+//import java.util.List;
 
 //import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +74,10 @@ public class ProductResource {
 
 	}
 
-	@PutMapping()
-	public ResponseEntity<ProductDTO> update(@RequestBody ProductDTO dto) {
-		dto = service.update(dto);
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
-
 	}
 
 	@DeleteMapping("/{id}")

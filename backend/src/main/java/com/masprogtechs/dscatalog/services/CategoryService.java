@@ -1,11 +1,9 @@
 package com.masprogtechs.dscatalog.services;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-//import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -49,7 +47,7 @@ public class CategoryService {
 		return new CategoryDTO(entity);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public CategoryDTO insert(CategoryDTO dto) {
 		Category entity = new Category();
 		entity.setName(dto.getName());
@@ -59,7 +57,22 @@ public class CategoryService {
 		return new CategoryDTO(entity);
 
 	}
+	
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO dto) {
+		try {
+			
+			Category entity = repository.getOne(id);
+			entity.setName(dto.getName());
+			entity = repository.save(entity);
+			return new CategoryDTO(entity);
+			
+		}catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("ID " + id + "nao encontrado");
+		}
+	}
 
+	/*
 	public CategoryDTO update(CategoryDTO dto) {
 	
 			Category entity = repository.findById(dto.getId()).
@@ -72,7 +85,7 @@ public class CategoryService {
 			BeanUtils.copyProperties(entity, dto);
 
 			return dto;
-	}
+	}*/
 	
 	public void delete(Long id) {
 		try {

@@ -1,11 +1,10 @@
 package com.masprogtechs.dscatalog.services;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
-//import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -14,10 +13,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.masprogtechs.dscatalog.dto.CategoryDTO;
 import com.masprogtechs.dscatalog.dto.ProductDTO;
+import com.masprogtechs.dscatalog.entities.Category;
 import com.masprogtechs.dscatalog.entities.Product;
 import com.masprogtechs.dscatalog.exceptions.DatabaseException;
 import com.masprogtechs.dscatalog.exceptions.ResourceNotFoundException;
+import com.masprogtechs.dscatalog.repositories.CategoryRepository;
 import com.masprogtechs.dscatalog.repositories.ProductRepository;
 
 @Service // registrar a class como componente que vai participar do sistema de injeccao
@@ -26,6 +28,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository repository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
@@ -60,17 +65,15 @@ public class ProductService {
 		return new ProductDTO(entity, entity.getCategories());
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
-		//entity.setName(dto.getName());
-
+		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
-
 		return new ProductDTO(entity);
-
 	}
-
+	
+	/*
 	public ProductDTO update(ProductDTO dto) {
 	
 			Product entity = repository.findById(dto.getId()).
@@ -83,6 +86,19 @@ public class ProductService {
 			BeanUtils.copyProperties(entity, dto);
 
 			return dto;
+	}*/
+	
+	@Transactional
+	public ProductDTO update(Long id, ProductDTO dto) {
+		try {
+			Product entity = repository.getOne(id);
+			copyDtoToEntity(dto, entity);
+			entity = repository.save(entity);
+			return new ProductDTO(entity);
+		}
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("ID " + id + " não encontrado.");
+		}
 	}
 	
 	public void delete(Long id) {
@@ -94,6 +110,20 @@ public class ProductService {
 			throw new DatabaseException("Integtation Vailation");
 		}
 		
+	}
+	
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
+		entity.setName(dto.getName());
+		entity.setPrice(dto.getPrice());
+		entity.setDescription(dto.getDescription());
+		entity.setDate(dto.getDate());
+		entity.setImgUrl(dto.getImgUrl());
+		
+		entity.getCategories().clear();
+		for (CategoryDTO catDto : dto.getCategories()) {
+			Category category = categoryRepository.getOne(catDto.getId());
+			entity.getCategories().add(category);
+		}
 	}
 	
 
