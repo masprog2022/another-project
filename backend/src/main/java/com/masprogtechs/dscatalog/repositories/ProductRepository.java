@@ -10,7 +10,8 @@ import com.masprogtechs.dscatalog.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-	
+
+	@Override
 	public Optional<Product> findById(Long id);
 
 

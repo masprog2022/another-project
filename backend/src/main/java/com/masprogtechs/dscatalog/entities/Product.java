@@ -21,31 +21,31 @@ import javax.persistence.Table;
 public class Product implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+
 	@Column(columnDefinition = "TEXT")
 	private String description;
 	private double price;
 	private String imgUrl;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant date;
-	
+
 	@ManyToMany
 	@JoinTable(name = "tb_product_category",
 	joinColumns = @JoinColumn(name = "product_id"),
 	inverseJoinColumns = @JoinColumn(name = "category_id"))
 	Set<Category> categories = new HashSet<>();
-	
+
 	public Product() {
-		
+
 	}
 
 	public Product(Long id, String name, String description, double price, String imgUrl, Instant date) {
@@ -118,18 +118,16 @@ public class Product implements Serializable{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
 
 
-	
-	
-	
-	
+
+
+
+
 
 }

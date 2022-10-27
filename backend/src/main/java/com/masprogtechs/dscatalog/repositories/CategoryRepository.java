@@ -7,5 +7,5 @@ import com.masprogtechs.dscatalog.entities.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-	
+
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +26,14 @@ public class CategoryService {
 	private CategoryRepository repository;
 
 	@Transactional(readOnly = true)
-	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
-		Page<Category> list = repository.findAll(pageRequest);
+	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
+		Page<Category> list = repository.findAll(pageable);
 
 		return list.map(x -> new CategoryDTO(x));
 
 		/*
 		 * List<CategoryDTO> listDTO = new ArrayList<>();
-		 * 
+		 *
 		 * for(Category cat: list) { listDTO.add(new CategoryDTO(cat)); }
 		 */
 		// return listDTO;
@@ -57,16 +57,16 @@ public class CategoryService {
 		return new CategoryDTO(entity);
 
 	}
-	
+
 	@Transactional
 	public CategoryDTO update(Long id, CategoryDTO dto) {
 		try {
-			
+
 			Category entity = repository.getOne(id);
 			entity.setName(dto.getName());
 			entity = repository.save(entity);
 			return new CategoryDTO(entity);
-			
+
 		}catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("ID " + id + "nao encontrado");
 		}
@@ -74,10 +74,10 @@ public class CategoryService {
 
 	/*
 	public CategoryDTO update(CategoryDTO dto) {
-	
+
 			Category entity = repository.findById(dto.getId()).
 					orElseThrow(() -> new ResourceNotFoundException("Category does not exist!"));
-			
+
 			BeanUtils.copyProperties(dto, entity);
 
 			entity = repository.save(entity);
@@ -86,17 +86,17 @@ public class CategoryService {
 
 			return dto;
 	}*/
-	
+
 	public void delete(Long id) {
 		try {
 		repository.deleteById(id);
 		}catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Id not found! " + id);	
+			throw new ResourceNotFoundException("Id not found! " + id);
 	    }catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integtation Vailation");
 		}
-		
+
 	}
-	
+
 
 }

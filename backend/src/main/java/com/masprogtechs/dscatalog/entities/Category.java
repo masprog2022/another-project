@@ -16,23 +16,23 @@ import javax.persistence.Table;
 public class Category implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant createdAt;
-	
+
 	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	private Instant updatedAt;
-	
+
 	public Category() {
-		
+
 	}
 
 	public Category(Long id, String name) {
@@ -55,8 +55,8 @@ public class Category implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+
 
 
 	public Instant getCreatedAt() {
@@ -84,9 +84,7 @@ public class Category implements Serializable{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Category other = (Category) obj;
 		return Objects.equals(id, other.id);
@@ -94,7 +92,7 @@ public class Category implements Serializable{
 
 
 
-	
-	
-	
+
+
+
 }
